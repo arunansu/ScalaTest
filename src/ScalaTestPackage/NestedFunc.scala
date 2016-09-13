@@ -1,6 +1,6 @@
 package ScalaTestPackage
 
-object FilterTest extends App {
+object FilterTest {
   def filter(xs: List[Int], threshold: Int) = {
     def process(ys: List[Int]): List[Int] = {
       if (ys.isEmpty) ys

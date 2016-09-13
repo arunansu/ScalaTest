@@ -1,6 +1,6 @@
 package ScalaTestPackage
 
-object CurryTest extends App {
+object CurryTest {
   def filter(xs: List[Int], p: Int => Boolean): List[Int] = {
     if (xs.isEmpty) xs
     else if (p(xs.head)) xs.head :: filter(xs.tail, p)
