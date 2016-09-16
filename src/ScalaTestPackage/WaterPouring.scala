@@ -27,7 +27,7 @@ class WaterPouring(capacity: Vector[Int]) {
               (for (from <- glasses; to <- glasses if from != to) yield Pour(from, to))
   
   class Path(history: List[Move]) {
-    def endState: State = trackState(history)
+    def endState: State = history.foldRight(initialState)(_ change _) //trackState(history)
     private def trackState(xs: List[Move]): State = xs match {
       case Nil => initialState
       case move :: xs1 => move.change(trackState(xs1))
