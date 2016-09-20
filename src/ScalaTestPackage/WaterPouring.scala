@@ -26,12 +26,37 @@ class WaterPouring(capacity: Vector[Int]) {
               (for (g <- glasses) yield Fill(g)) ++
               (for (from <- glasses; to <- glasses if from != to) yield Pour(from, to))
   
-  class Path(history: List[Move]) {
-    def endState: State = history.foldRight(initialState)(_ change _) //trackState(history)
+  class Path(history: List[Move], val endState: State) {
+    //def endState: State = history.foldRight(initialState)(_ change _) //trackState(history)
     private def trackState(xs: List[Move]): State = xs match {
       case Nil => initialState
       case move :: xs1 => move.change(trackState(xs1))
     }
+    def extend(move: Move) = new Path(move :: history, move change endState)
+    override def toString = (history.reverse mkString " ") + "--> " + endState
+  }
+  
+  val initialPath = new Path(Nil, initialState)
+  
+  def from(paths: Set[Path], explored: Set[State]): Stream[Set[Path]] = {
+    if (paths.isEmpty) Stream.Empty
+    else {
+      val more = for {
+        path <- paths
+        next <- moves.map(path.extend)
+        if !(explored contains next.endState)
+      } yield next
+      paths #:: from(more, explored ++ (more.map(_.endState)))
+    }
+  }
+  val pathSets = from(Set(initialPath), Set(initialState))
+  
+  def solution(target: Int): Stream[Path] = {
+    for {
+      pathSet <- pathSets
+      path <- pathSet
+      if path.endState contains target
+    } yield path
   }
 }
 
@@ -39,6 +64,8 @@ class WaterPouring(capacity: Vector[Int]) {
 
 object WaterPouringTest {
   def main(args: Array[String]) {
-    val problem = new WaterPouring(Vector(4,7))
+    val problem = new WaterPouring(Vector(4,9, 19))
+    println(problem.moves)
+    println(problem.solution(17))
   }
 }
