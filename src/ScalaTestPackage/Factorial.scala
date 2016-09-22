@@ -4,7 +4,8 @@ object Factorial {
   def factorialRec(n: Int): Int = {
     n match {
       case 1 => 1
-      case _ => n * factorialRec(n-1)
+      case m if m > 1 => n * factorialRec(n-1)
+      case m if m < 1 => 0
     }
   }
   def factorialTailRec(n: Int): Int = {
