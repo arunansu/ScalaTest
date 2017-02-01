@@ -8,5 +8,6 @@ object StreamTest {
   }
   def main(args: Array[String]) {
     println(sqrtStream(4).take(10).toList)
+    val nums = List(1, 2, 3, 4).toStream
   }
 }
